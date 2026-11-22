@@ -1,15 +1,65 @@
 import express from "express";
 
 const app = express();
+app.use(express.json());
+
 const PORT = 4000;
 
-// use underscore (_req) because the request doesn't contain infomration we need yet.
-
+// use underscore (_req) because the request doesn't contain information we need yet.
 app.get("/health", (_req, res) => {
   res.json({
     service: "banm-lajan-payment-api",
     status: "ok",
   });
+});
+
+app.post("/payments", (req, res) => {
+  const { asset, amount, recipient } = req.body ?? {};
+
+  if (asset !== "SOL") {
+    res.status(400).json({
+      error: "Unsupported asset",
+    });
+  }
+
+  if (
+    typeof asset !== "string" ||
+    !asset.trim() ||
+    typeof amount !== "string" ||
+    !amount.trim() ||
+    typeof recipient !== "string" ||
+    !recipient.trim()
+  ) {
+    res.status(400).json({
+      error: "Asset, amount, and recipient are required",
+    });
+    return;
+  }
+
+  const value = Number(amount);
+
+  const decimalPlaces = amount.split(".")[1]?.length ?? 0;
+
+  const paymentAmountCheck =
+    !/^\d+(\.\d+)?$/.test(amount) ||
+    !Number.isFinite(value) ||
+    value <= 0 ||
+    decimalPlaces > 9;
+
+  if (paymentAmountCheck) {
+    res.status(400).json({
+      error: "Invalid payment amount",
+    });
+  }
+
+  const payment = {
+    asset,
+    amount,
+    recipient,
+    status: "draft",
+  };
+
+  res.status(201).json(payment);
 });
 
 app.listen(PORT, () => {
