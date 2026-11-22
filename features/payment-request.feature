@@ -29,5 +29,10 @@ Feature: Create Payment Request
         Given a merchant enters an invalid Solana address
         When the payment request is submitted
         Then the system should return HTTP 400
-        And the error should be "Invalid Solana recipient address"
+        
+    Scenario: Reject an invalid Solana wallet address
+        Given a merchant provides an invalid Solana wallet address
+        When the merchatn submits a payment request
+        Then the system should return HTTP 400
+        And the error should be "Invalid Solanda recipient address"
     

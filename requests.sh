@@ -32,3 +32,18 @@ curl -i -X POST http://localhost:4000/payments \
     -d '{}'
 
 echo
+
+#BDD: Reject an invalid Solana wallet address
+
+echo "=== Invalid Solana Address ==="
+
+curl -i -X POST http://localhost:4000/payments \
+    -H "Content-Type: application/json" \
+    -d '{
+        "asset": "SOL",
+        "amount": "0.5",
+        "recipient": "invalid-address"
+    
+    }'
+
+echo

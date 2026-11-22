@@ -1,4 +1,5 @@
 import express from "express";
+import { PublicKey } from "@solana/web3.js";
 
 const app = express();
 app.use(express.json());
@@ -50,6 +51,18 @@ app.post("/payments", (req, res) => {
     res.status(400).json({
       error: "Invalid payment amount",
     });
+  }
+
+  try {
+    const publicKey = new PublicKey(recipient);
+    if (publicKey.toBase58() !== recipient) {
+      throw new Error("Invalid address format");
+    }
+  } catch {
+    res.status(400).json({
+      err: "Invalid Solana recipient address",
+    });
+    return;
   }
 
   const payment = {
