@@ -1,0 +1,35 @@
+
+# Dependencies — Client & Server
+node_modules/
+
+# Next.js
+.next/
+out/
+.vercel/
+
+# Builds
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Rust & Solana
+target/
+.anchor/
+test-ledger/
+*-keypair.json
+
+# macOS
+.DS_Store
+
+# Editors
+.idea/
+.vscode/
