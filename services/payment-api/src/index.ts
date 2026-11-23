@@ -2,6 +2,7 @@ import express from "express";
 import { PublicKey } from "@solana/web3.js";
 import { randomUUID } from "node:crypto";
 import { PAYMENT_STATUS } from "./payment-status.ts";
+import { pool } from "./database.ts";
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,15 @@ app.get("/health", (_req, res) => {
     service: "banm-lajan-payment-api",
     status: "ok",
   });
+});
+
+app.get("/health/db", async (_req, res) => {
+  try {
+    await pool.query("SELECT 1");
+    res.json({ database: "connected" });
+  } catch {
+    res.status(503).json({ database: "unavailable" });
+  }
 });
 
 app.get("/payments/statuses", (_req, res) => {
