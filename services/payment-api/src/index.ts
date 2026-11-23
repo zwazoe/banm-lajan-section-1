@@ -1,5 +1,7 @@
 import express from "express";
 import { PublicKey } from "@solana/web3.js";
+import { randomUUID } from "node:crypto";
+import { PAYMENT_STATUS } from "./payment-status.ts";
 
 const app = express();
 app.use(express.json());
@@ -14,6 +16,12 @@ app.get("/health", (_req, res) => {
   });
 });
 
+app.get("/payments/statuses", (_req, res) => {
+  res.json({
+    statuses: Object.values(PAYMENT_STATUS),
+  });
+});
+
 app.post("/payments", (req, res) => {
   const { asset, amount, recipient } = req.body ?? {};
 
@@ -21,6 +29,7 @@ app.post("/payments", (req, res) => {
     res.status(400).json({
       error: "Unsupported asset",
     });
+    return;
   }
 
   if (
@@ -66,6 +75,7 @@ app.post("/payments", (req, res) => {
   }
 
   const payment = {
+    id: randomUUID(),
     asset,
     amount,
     recipient,

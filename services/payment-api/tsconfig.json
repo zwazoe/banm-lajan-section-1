@@ -14,6 +14,8 @@
     // "lib": ["esnext"],
     // "types": ["node"],
     // and npm install -D @types/node
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
 
     // Other Outputs
     "sourceMap": true,
@@ -39,6 +41,6 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
+    "skipLibCheck": true
   }
 }
